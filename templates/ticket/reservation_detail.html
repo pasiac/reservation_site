@@ -1,0 +1,5 @@
+{% for ticketreservation in object.ticketreservation_set.all %}
+    {{ticketreservation.ticket}} {{ticketreservation.quantity}}<br>
+{% endfor %}
+paid: {{ object.paid }}<br>
+total: {{ total_amount }}

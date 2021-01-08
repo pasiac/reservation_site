@@ -1,0 +1,17 @@
+{{ object.name }}
+{{ object.date }}<br>
+Tickets<br>
+{% for ticket in tickets %}
+    {% if ticket.quantity == 0 %}
+        <div class="sold-out">
+            {{ ticket.name }} {{ ticket.price }}<br>
+            WYPRZEDANE
+        </div>
+    {% else %}
+        <div class="available-tickets">
+            {{ ticket.name }} {{ ticket.price }} {{ ticket.quantity }}<br>
+            <a href="{% url 'ticket_details'  ticket.pk %}" class="btn btn-primary">Details</a>
+        </div>
+    {% endif %}
+{% endfor %}
+<a href="{% url 'ticket_reservation_create' %}" class="btn btn-primary">Buy</a>

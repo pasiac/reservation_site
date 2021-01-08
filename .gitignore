@@ -1,0 +1,61 @@
+ Byte-compiled / optimized / DLL files
+__pycache__/
+/__pycache__/
+__pycache__/
+/migrations/
+migrations/
+*.py[cod]
+celery.txt
+celerybeat-schedule
+chromedriver
+*.sqlite3
+# C extensions
+*.so
+/.vscode/
+foodenv/
+/htmlcov
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+media/
+docs/_build/

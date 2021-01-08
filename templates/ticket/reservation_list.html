@@ -1,0 +1,5 @@
+{{ message }}
+
+{% for reservation in object_list %}
+    nazwa:{{ reservation }} aktywny:{{reservation.active}} zaplacone: {{reservation.paid}}<br>
+{% endfor %}
