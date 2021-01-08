@@ -8,6 +8,16 @@ from datetime import datetime
 from django.shortcuts import redirect
 
 
+# TODO:
+# 1. Decrease quantity of tickets when reserved
+# 2. If reservation expired increase quantity of tickets available
+# 3. Create view with statistics
+# 4. Rewrite paymentview
+# 5. Create possibility to pass message to reservation_list
+# 6. Check clean code issues reservation have path "orders" and so one
+# 5. Write tests
+
+
 class TicketDetailView(DetailView):
     model = Ticket
 
@@ -24,6 +34,7 @@ class TicketReservationCreateView(CreateView):
         if not reservation:
             reservation = Reservation.objects.create(reserved_by=user, paid=False, active=True)
         obj.reservation = reservation
+        obj.ticket.quantity -= obj.quantity
         obj.save()
         return super().form_valid(form)
 
@@ -56,16 +67,31 @@ class PaymentView(FormView):
         cost = reservation.calculate_total_tickets_cost()
         if not reservation:
             return self.form_invalid(form)
-        
-        # I am not sure if I cant pass parameter message this way
-        if reservation.is_expired():
-            reservation.delete()
-            return redirect('reservation_list', message="Reservation expired")
 
+        # There should be options to pass messsage message="Reservation expired"
+        if reservation.is_expired():
+            self._resolve_available_tickets(reservation)
+            reservation.delete()
+            return redirect('reservation_list')
+
+        # There should be validation with payment class to make use of exceptions
+        # And also a  message="Your payment was successful!" 
+        # TODO: Change reservation list to accept message
         if form.is_valid():
             payment.charge(cost, "paid")
             reservation.paid = True
             reservation.paid_time = datetime.now()
             reservation.save()
+            return redirect('reservation_list')
         else:
             return self.form_invalid(form)
+
+    def _resolve_available_tickets(self, reservation):
+        '''
+        Increase number of available tickets from reservation that expired
+        @param reservation: expired reservation
+        '''
+        ticket_reservations = reservation.tickereservation_set.all()
+        for ticket_reservation in ticket_reservations:
+            ticket_reservation.ticket.quantity += ticket_reservation.quantity
+            ticket_reservation.save()

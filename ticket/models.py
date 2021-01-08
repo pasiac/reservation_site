@@ -22,6 +22,7 @@ class Reservation(models.Model):
     active = models.BooleanField(default=True)
     experation_time = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(minutes=15), blank=True)
 
+    # meaby change this to property total_cost
     def calculate_total_tickets_cost(self):
         reserved_tickets = self.ticketreservation_set.all()
         total_cost = sum(Decimal(str(reserved_ticket.quantity)) * reserved_ticket.ticket.price for reserved_ticket in reserved_tickets)
