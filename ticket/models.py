@@ -1,8 +1,10 @@
-from django.db import models
-from event.models import Event
-from django.contrib.auth.models import User
-from decimal import Decimal
 import datetime
+from decimal import Decimal
+
+from django.contrib.auth.models import User
+from django.db import models
+
+from event.models import Event
 
 
 class Ticket(models.Model):
@@ -20,20 +22,26 @@ class Reservation(models.Model):
     paid = models.BooleanField(default=False)
     paid_time = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
-    experation_time = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(minutes=15), blank=True)
+    experation_time = models.DateTimeField(
+        default=datetime.datetime.now() + datetime.timedelta(minutes=15), blank=True
+    )
 
     # meaby change this to property total_cost
     def calculate_total_tickets_cost(self):
         reserved_tickets = self.ticketreservation_set.all()
-        total_cost = sum(Decimal(str(reserved_ticket.quantity)) * reserved_ticket.ticket.price for reserved_ticket in reserved_tickets)
+        total_cost = sum(
+            Decimal(str(reserved_ticket.quantity)) * reserved_ticket.ticket.price
+            for reserved_ticket in reserved_tickets
+        )
         return total_cost
 
     def is_expired(self):
         now = datetime.datetime.now()
-    
+
         if self.experation_time.replace(tzinfo=None) < now:
             return True
         return False
+
 
 class TicketReservation(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
