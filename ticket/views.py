@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView
 
 from ticket.forms import PaymentForm, TicketReservationForm
-from ticket.models import Reservation, Ticket
+from ticket.models import Reservation, Ticket, TicketReservation
 from utils.payment import PaymentGateway
 
 # TODO:
@@ -25,7 +25,13 @@ class TicketDetailView(DetailView):
 class TicketReservationCreateView(CreateView):
     template_name = "ticket/ticket_reservation_form.html"
     form_class = TicketReservationForm
+    model = TicketReservation
     success_url = reverse_lazy("reservation_list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"event_id": self.kwargs.get("event_id")})
+        return kwargs
 
     def form_valid(self, form):
         obj = form.save(commit=False)

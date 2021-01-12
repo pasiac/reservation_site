@@ -14,4 +14,4 @@ Tickets<br>
         </div>
     {% endif %}
 {% endfor %}
-<a href="{% url 'ticket_reservation_create' %}" class="btn btn-primary">Buy</a>
+<a href="{% url 'ticket_reservation_create' object.pk %}" class="btn btn-primary">Buy</a>
