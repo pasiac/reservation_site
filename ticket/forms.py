@@ -1,11 +1,15 @@
-from creditcards.forms import (CardExpiryField, CardNumberField,
-                               SecurityCodeField)
+from creditcards.forms import CardExpiryField, CardNumberField, SecurityCodeField
 from django.forms import Form, ModelForm
 
-from ticket.models import TicketReservation
+from ticket.models import TicketReservation, Ticket
 
 
 class TicketReservationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        event_id = kwargs.pop("event_id")
+        super().__init__(*args, **kwargs)
+        self.fields["ticket"].queryset = Ticket.objects.filter(event__pk=event_id)
+
     class Meta:
         model = TicketReservation
         fields = ["quantity", "ticket"]
